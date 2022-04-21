@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Show Product{% endblock %}
+
+{% block body %}
+    <main>
+        <section class="section section-show-product">
+            <div class="container">
+                <h4 class="m-0">Show Product</h4>
+            </div>
+
+            <div class="container pt-50">
+                <table class="mb-4">    
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th>Name:</th>
+                            <th>Description:</th>
+                            <th>Price:</th>
+                            <th>Actions:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.description }}</td>
+                            <td>{{ product.price }}</td>
+                            <td class="grid columns-two items-left gap-3">
+                                <a href="{{ path('product-edit_product', {'id': product.id}) }}" class="btn waves-effect waves-light yellow darken-2">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                                {{ include('product/_delete.html.twig') }}
+                            </td>
+                        </tr>
+                    </tbody>  
+                </table>
+
+                <div class="row">
+                    <a href="{{ path('product-show_all_products') }}" class="btn light-blue darken-1">
+                        <i class="material-icons left" style="display: inline-block;">keyboard_backspace</i>
+                        <span style="height: 100%; display: inline-block;">Back</span>                  
+                    </a>
+                </div>                
+            </div>
+        </section>
+    </main>
+{% endblock %}

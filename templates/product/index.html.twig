@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All Products{% endblock %}
+
+{% block body %}
+    <main>
+        <section class="section section-products">
+            <div class="container">
+                <div class="grid columns-two items-between align-center grid-flow-col">
+                    <h4 class="m-0">All Products</h4>
+                    <div class="grid columns-two gap-4">
+                        <a href="{{ path('product-add_product') }}" class="btn light-blue darken-1 flex align-center gap-3">
+                            <i class="material-icons">edit</i>
+                            <span>Create</span>
+                        </a>
+                        <a href="{{ path('product-new') }}" class="btn light-blue darken-1 flex align-center gap-3">
+                            <i class="material-icons">edit</i>
+                            <span>New</span>
+                        </a>                    
+                    </div>
+                </div>
+
+                <div class="filter">
+                    <label for="sort_by">Sort By:</label>
+                    <select name="sort_by" id="sort_by" style="display:block;">
+                        <option value="price_asc">Price ASC</option>
+                        <option value="price_desc">Price Desc</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="container pt-50">
+                <table>    
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th>Name:</th>
+                            <th>Description:</th>
+                            <th>Price:</th>
+                            <th>Actions:</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        {% for product in products %}
+                            <tr>
+                                <td>{{ product.id }}</td>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.description }}</td>
+                                <td>{{ product.price }}</td>
+                                <td class="grid columns-three items-left gap-3">
+                                    <a href="{{ path('product-show_product', {'slug': product.slug}) }}" class="btn btn-icon waves-effect waves-light teal lighten-2">
+                                        <i class="material-icons">visibility</i>                                
+                                    </a>
+                                    <a href="{{ path('product-edit_product', {'id': product.id}) }}" class="btn btn-icon waves-effect waves-light yellow darken-2">
+                                        <i class="material-icons">edit</i>                                
+                                    </a>
+                                    {{ include('product/_delete.html.twig') }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4">Ne postoji kreirani sadrzaj.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>  
+                </table>
+            </div>
+        </section>
+    </main>
+
+
+    <script>
+        let tableBody = document.getElementById('table-body');
+        let filter = document.getElementById('sort_by');
+
+        filter.addEventListener('change', function() {
+            $.get('{{ path("product-sort") }}', { filter: this.value }, function(products) {
+                let table = "";
+
+                for (const product of products) {
+                    let show = "{{ url('product-show_product', {slug: '_id'}) }}";
+                    let path_show = show.replace('_id', product.slug);
+
+                    let edit = "{{ url('product-edit_product', {id: '_id'}) }}";
+                    let path_edit = edit.replace('_id', product.id);
+
+                    table +=`
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.description}</td>
+                            <td>${product.price}</td>
+                            <td>
+                                <a href="${path_show}" class="btn btn-icon waves-effect waves-light teal lighten-2">
+                                    <i class="material-icons">visibility</i>       
+                                </a>
+                                <a href="${path_edit}" class="btn btn-icon waves-effect waves-light yellow darken-2">
+                                    <i class="material-icons">edit</i>       
+                                </a>     
+                                
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                tableBody.innerHTML = table;
+            });
+        });
+    </script>
+
+{% endblock %}
